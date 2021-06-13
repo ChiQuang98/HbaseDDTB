@@ -12,49 +12,9 @@ import java.io.IOException;
 
 public class Test {
     public static void main(String[] args) throws IOException {
-        Configuration conf = HBaseConfiguration.create();
-        conf.clear();
-        conf.set("hbase.zookeeper.quorum", "192.168.245.128");
-        conf.set("hbase.zookeeper.property.clientPort", "2181");
-        conf.set("hbase.rootdir","/apps/hbase/data");
-//            conf.set("zookeeper.znode.parent","/hbase-secure");
-        conf.set("hbase.cluster.distributed","false");
-        conf.set("zookeeper.znode.parent","/hbase");
-//        conf.set("hbase.defaults.for.version.skip", "true");
-//        System.setProperty("javax.security.auth.useSubjectCredsOnly", "false");
-        conf.set("hbase.client.retries.number", "2");  // default 35
-        conf.set("hbase.rpc.timeout", "10000");  // default 60 secs
-        conf.set("hbase.rpc.shortoperation.timeout", "10000"); // default 10 secs
-
-        // Instantiating HBaseAdmin class
-//            HBaseAdmin admin = new HBaseAdmin(conf);
-        Connection connection = ConnectionFactory.createConnection(conf);
-        Admin admin = connection.getAdmin();
-
-        Table hTable = connection.getTable(TableName.valueOf("emp"));
-        // Instantiating Put class
-        // accepts a row name.
-        Put p = new Put(Bytes.toBytes("row1"));
-
-        // adding values using add() method
-        // accepts column family name, qualifier/row name ,value
-        p.addColumn(Bytes.toBytes("personal"),
-                Bytes.toBytes("name"),Bytes.toBytes("raju"));
-
-        p.addColumn(Bytes.toBytes("personal"),
-                Bytes.toBytes("city"),Bytes.toBytes("hyderabad"));
-
-        p.addColumn(Bytes.toBytes("professional"),Bytes.toBytes("designation"),
-                Bytes.toBytes("manager"));
-
-        p.addColumn(Bytes.toBytes("professional"),Bytes.toBytes("salary"),
-                Bytes.toBytes("50000"));
-
-        // Saving the put Instance to the HTable.
-        hTable.put(p);
-        System.out.println("data inserted");
-
-        // closing HTable
-        hTable.close();
+        String s = "NVL01_1,20210614030043,241.66.85.130,3441,76.29.202.87,6997,82.94.184.253,7704";
+        String [] ar = s.split(",");
+        System.out.println(ar[0]);
+        System.out.println(ar.length);
     }
 }

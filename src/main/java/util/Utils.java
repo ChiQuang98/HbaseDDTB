@@ -16,7 +16,7 @@ public class Utils {
     public Connection GetConnectionHbase() throws IOException {
         Configuration conf = HBaseConfiguration.create();
         conf.clear();
-        conf.set("hbase.zookeeper.quorum", "192.168.245.128");
+        conf.set("hbase.zookeeper.quorum", "localhost");
         conf.set("hbase.zookeeper.property.clientPort", "2181");
         conf.set("hbase.rootdir","/apps/hbase/data");
 //            conf.set("zookeeper.znode.parent","/hbase-secure");
