@@ -1,0 +1,19 @@
+{
+  "Socket": {
+    "TCP": {
+      "Host": "",
+      "Port1": 11000,
+      "Port2": 11001
+    }
+  },
+  "Hbase": {
+    "MDO": {
+      "MDOName": "MDOTable",
+      "TTL": 10000
+    },
+    "SYS": {
+      "SYSName": "SYSTable",
+      "TTL": 100000
+    }
+  }
+}
