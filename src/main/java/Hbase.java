@@ -29,12 +29,14 @@ class HBase {
                     Table tableMDO = connection.getTable(TableName.valueOf("MDOTable"));
                     while (true) {
                         String data = clientController1.readData();
-                        writer.println(data);
+//                        writer.println(data);
                         // add to queue
 //                        queue.add(data);
 //                        System.out.println(data);
                         String[] rowData = data.split("\\|");
-                        String rowName = "KEY_" + rowData[4];
+                        String rowName = "KEY=" + index;
+//                        System.out.println(rowName);
+//                        String rowName = "KEY_" + rowData[4];
                         // KEY_IPPRIVATE
                         utilHbase.insertData(tableMDO,rowName,utilHbase.getNameCFMDO(),utilHbase.getNamecolumMDO(),TTL,rowData);
                         Put p = new Put(Bytes.toBytes(rowName));
@@ -58,6 +60,7 @@ class HBase {
                     Table tableSYS = connection.getTable(TableName.valueOf("SYSTable"));
                     Table tableMDO = connection.getTable(TableName.valueOf("MDOTable"));
                     Scan scan = new Scan();
+                    int index =0;
                     while (true) {
                         String data = clientController2.readData();
 //                        writer.get().println(data);
@@ -67,7 +70,9 @@ class HBase {
                         Date dateRowSYS, dateRowMDO;
                         SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
                         dateRowSYS = df.parse(rowData[1]);
-                        Get get = new Get(Bytes.toBytes("KEY_" + rowData[2]));
+                        Get get = new Get(Bytes.toBytes("KEY=" + index));
+                        index++;
+//                        Get get = new Get(Bytes.toBytes("KEY=" + rowData[2]));
                         get.addFamily(Bytes.toBytes("Info"));
                         get.addFamily(Bytes.toBytes("Times"));
                         get.addFamily(Bytes.toBytes("Type"));
@@ -75,10 +80,12 @@ class HBase {
                         String phoneNumMDO = Bytes.toString(result.getValue(Bytes.toBytes("Info"), Bytes.toBytes("PhoneNumber")));
                         String timeStamp = Bytes.toString(result.getValue(Bytes.toBytes("Times"), Bytes.toBytes("Timestamp")));
                         String typeBegin = Bytes.toString(result.getValue(Bytes.toBytes("Type"), Bytes.toBytes("TypeBegin")));
+//                        System.out.println("Inserted Phone to Table SYS: "+phoneNumMDO);
                         if(typeBegin!=null&&timeStamp!=null&&phoneNumMDO!=null){
                             if (typeBegin.compareToIgnoreCase("Start")==0){
                                 dateRowMDO = df.parse(timeStamp);
                                 if(dateRowSYS.getTime() >= dateRowMDO.getTime()){
+
                                     data = data+","+phoneNumMDO;
                                     rowData = data.split(",");
                                     String rowKey= rowData[4]+"_"+rowData[5]+"_"+rowData[1];

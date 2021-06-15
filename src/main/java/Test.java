@@ -18,27 +18,32 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 
 public class Test {
-    public static void main(String[] args) throws IOException, InterruptedException {
 
-        PrintWriter writer = new PrintWriter(new FileOutputStream("SYSTest.txt",true));
+    public static void main(String[] args) throws IOException, InterruptedException {
+        Scan scan = new Scan();
+        scan.setCaching(5);
+//        byte[] rowKeys = Bytes.toBytesBinary("KEY=\\x01\\x01");
+//        byte[] fuzzyInfo = {0,0,0,0,1,1};
+//        FuzzyRowFilter fuzzyFilter = new FuzzyRowFilter(
+//                Arrays.asList(
+//                        new Pair<byte[], byte[]>(
+//                                rowKeys,
+//                                fuzzyInfo)));
+//        System.out.println("### fuzzyFilter: " + fuzzyFilter.toString());
+        scan.addFamily(Bytes.toBytesBinary("Info"));
+        scan.setStartRow(Bytes.toBytesBinary("KEY=1"));
+//        scan.setStopRow(Bytes.toBytesBinary("KEY=20"));
+//        scan.setFilter(fuzzyFilter);
         Utils utilHbase = new Utils();
         Connection connection = utilHbase.GetConnectionHbase();
-//        while (true) {
-//            String data = clientController2.readData();
-             writer.println("data");
-            int count = 0;
-
-            Table tableSYS = connection.getTable(TableName.valueOf("MDOTable"));
-            Get get = new Get(Bytes.toBytes("KEY_" +"182.8.138.214"));
-            get.addFamily(Bytes.toBytes("Info"));
-            get.addFamily(Bytes.toBytes("Times"));
-            get.addFamily(Bytes.toBytes("Type"));
-            Result result = tableSYS.get(get);
-            String phoneNumMDO = Bytes.toString(result.getValue(Bytes.toBytes("Info"), Bytes.toBytes("PhoneNumber")));
-            String timestamp = Bytes.toString(result.getValue(Bytes.toBytes("Times"), Bytes.toBytes("Timestamp")));
-            String typeBegin = Bytes.toString(result.getValue(Bytes.toBytes("Type"), Bytes.toBytes("TypeBegin")));
-            System.out.println(phoneNumMDO);
-
+        Table table = connection.getTable(TableName.valueOf("MDOTable"));
+        ResultScanner results = table.getScanner(scan);
+        int count = 0;
+        int limit = 10;
+        for ( Result r : results ) {
+            System.out.println("" + r.toString());
+            if (count++ >= limit) break;
+        }
 
     }
 }
