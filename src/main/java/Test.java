@@ -22,6 +22,5 @@ public class Test {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         new HbaseAPI().GetRowsByIPSYS("127.105.235.60",8689,"");
-
     }
 }

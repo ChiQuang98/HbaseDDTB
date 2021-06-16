@@ -9,8 +9,7 @@ import java.io.IOException;
 
 public class HbaseAPI {
     public void GetRowsByIPSYS(String ipPrivate, int portPrivate, String timeStamp) throws IOException {
-        Scan scan = new Scan();
-        scan.setCaching(5);
+
 //        byte[] rowKeys = Bytes.toBytesBinary("KEY=\\x01\\x01");
 //        byte[] fuzzyInfo = {0,0,0,0,1,1};
 //        FuzzyRowFilter fuzzyFilter = new FuzzyRowFilter(
@@ -19,7 +18,12 @@ public class HbaseAPI {
 //                                rowKeys,
 //                                fuzzyInfo)));
 //        System.out.println("### fuzzyFilter: " + fuzzyFilter.toString());
+
         String keyPrefix = ipPrivate+"_"+portPrivate+"_";
+        byte[] prefix=Bytes.toBytes(keyPrefix);
+        Scan scan = new Scan();
+        scan.setRowPrefixFilter(prefix);
+        scan.setCaching(5);
         scan.addFamily(Bytes.toBytesBinary("Info"));
         scan.setStartRow(Bytes.toBytesBinary(keyPrefix));
 //        scan.setStopRow(Bytes.toBytesBinary("KEY=20"));
