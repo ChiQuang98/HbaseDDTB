@@ -20,24 +20,20 @@ import java.util.Arrays;
 public class Test {
     public static void main(String[] args) throws IOException, InterruptedException {
 
-        PrintWriter writer = new PrintWriter(new FileOutputStream("SYSTest.txt",true));
-        Utils utilHbase = new Utils();
-        Connection connection = utilHbase.GetConnectionHbase();
-//        while (true) {
-//            String data = clientController2.readData();
-             writer.println("data");
-            int count = 0;
-
-            Table tableSYS = connection.getTable(TableName.valueOf("MDOTable"));
-            Get get = new Get(Bytes.toBytes("KEY_" +"182.8.138.214"));
-            get.addFamily(Bytes.toBytes("Info"));
-            get.addFamily(Bytes.toBytes("Times"));
-            get.addFamily(Bytes.toBytes("Type"));
-            Result result = tableSYS.get(get);
-            String phoneNumMDO = Bytes.toString(result.getValue(Bytes.toBytes("Info"), Bytes.toBytes("PhoneNumber")));
-            String timestamp = Bytes.toString(result.getValue(Bytes.toBytes("Times"), Bytes.toBytes("Timestamp")));
-            String typeBegin = Bytes.toString(result.getValue(Bytes.toBytes("Type"), Bytes.toBytes("TypeBegin")));
-            System.out.println(phoneNumMDO);
+        Scan scan = new Scan();
+        scan.setCaching(5);
+        byte[] rowKeys = Bytes.toBytesBinary("???.01");
+        byte[] fuzzyInfo = {0x01,0x01,0x01,0x01,0x00,0x00};
+        FuzzyRowFilter fuzzyFilter = new FuzzyRowFilter(
+                Arrays.asList(
+                        new Pair<byte[], byte[]>(
+                                rowKeys,
+                                fuzzyInfo)));
+        System.out.println("### fuzzyFilter: " + fuzzyFilter.toString());
+        scan.addFamily(Bytes.toBytesBinary("colfam1"));
+        scan.setStartRow(Bytes.toBytesBinary("row-01"));
+        scan.setStopRow(Bytes.toBytesBinary("row-05"));
+        scan.setFilter(fuzzyFilter);
 
 
     }
