@@ -32,7 +32,7 @@ class HBase {
                         writer.println(data);
                         // add to queue
 //                        queue.add(data);
-//                        System.out.println(data);
+                        System.out.println(data);
                         String[] rowData = data.split("\\|");
                         String rowName = "KEY_" + rowData[4];
                         // KEY_IPPRIVATE
@@ -66,9 +66,10 @@ class HBase {
                     Scan scan = new Scan();
                     while (true) {
                         String data = clientController2.readData();
+                        System.out.println(data);
 //                        writer.get().println(data);
-                        writer.flush();
-                        writer.println(data);
+//                        writer.flush();
+//                        writer.println(data);
                         String[] rowData = data.split(",");
                         String rowName = "row" + index;
                         Date dateRowSYS, dateRowMDO;
@@ -89,7 +90,7 @@ class HBase {
                                 if(dateRowSYS.getTime() >= dateRowMDO.getTime()){
                                     data = data+","+phoneNumMDO;
                                     rowData = data.split(",");
-                                    boolean isDone = utilHbase.insertData(tableMDO,rowName,utilHbase.getNameCFSYS(),utilHbase.getNamecolumSYS(),TTL,rowData);
+                                    boolean isDone = utilHbase.insertData(tableSYS,rowName,utilHbase.getNameCFSYS(),utilHbase.getNamecolumSYS(),TTL,rowData);
                                     if (isDone==true){
                                         System.out.println("Inserted Phone to Table SYS: "+phoneNumMDO);
                                     }
